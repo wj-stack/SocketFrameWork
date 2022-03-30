@@ -8,6 +8,8 @@
 namespace wyatt
 {
 
+    LoggerManager::ptr LoggerManager::loggerManager;
+
     LoggerManager::LoggerManager()         {
         Logger::ptr logger = make_shared<Logger>("root", Level::DEBUG, make_shared<Formatter>());
         logger->addAppender(shared_ptr<Appender>(new StdoutAppender()));
@@ -68,5 +70,6 @@ namespace wyatt
 
 
     }
+
 
 }

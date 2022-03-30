@@ -8,7 +8,7 @@
 #include <memory>
 #include <iostream>
 #include <fstream>
-
+#include <map>
 using namespace std;
 
 namespace wyatt
@@ -33,19 +33,27 @@ namespace wyatt
     class FileAppender  : public Appender
     {
     private:
-        std::fstream fs;
+//        std::fstream fs;
+        static std::map<std::string,std::fstream> mp;
+        std::string m_path;
     public:
-        explicit FileAppender(const char* filepath){
-            fs.open(filepath, ios_base::app);
+        explicit FileAppender(const char* filepath) : m_path(filepath){
+            cout << "FileAppender(const char* filepath) : m_path(filepath)" << filepath << endl;
+            if (mp.find(filepath) == mp.end()) {
+                mp[filepath].open(filepath, ios_base::app);
+            }
         }
         ostream & getOstream() override{
-            return fs;
+            return mp[m_path];
         }
         ~FileAppender() override{
-            fs.flush();
-            fs.close();
+//            cout << m_path << " " <<  "~FileAppender()" << endl;
+            mp[m_path].flush();
+            mp[m_path].close();
         }
     };
+
+
 }
 
 #endif //LOG_APPENDER_H

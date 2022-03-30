@@ -11,7 +11,8 @@
 #include "../config/config.h"
 
 #define WYATT_LOG_ROOT_DEBUG() wyatt::EventWarp(wyatt::LoggerManager::getInstance()->getRootLogger(), wyatt::Level::DEBUG,__FILE__,__LINE__).getSs()
-#define WYATT_LOG_DEBUG(logger) wyatt::EventWarp(wyatt::LoggerManager::getInstance()->getLogger(logger), wyatt::Level::DEBUG,__FILE__,__LINE__).getSs()
+#define WYATT_LOG_NAME(logger) wyatt::LoggerManager::getInstance()->getLogger(logger)
+#define WYATT_LOG_DEBUG(logger) wyatt::EventWarp(logger, wyatt::Level::DEBUG,__FILE__,__LINE__).getSs()
 
 namespace wyatt
 {
@@ -171,8 +172,6 @@ namespace wyatt
 
         void init();
     };
-
-    LoggerManager::ptr LoggerManager::loggerManager;
 
 }
 #endif //LOG_LOGGERMANAGER_H
