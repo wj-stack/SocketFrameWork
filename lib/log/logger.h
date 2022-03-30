@@ -10,29 +10,31 @@
 #include "appender.h"
 #include "formatter.h"
 
-class Logger {
-private:
-    set<Appender::ptr> appenders;
-    string name;
-    Level::level level;
-    Formatter::ptr formatter;
+namespace wyatt{
+    class Logger {
+    private:
+        set<Appender::ptr> appenders;
+        string name;
+        Level::level level;
+        Formatter::ptr formatter;
 
-public:
-    Logger(string name, Level::level level, Formatter::ptr formatter) : name(std::move(name)), level(level),
-                                                                                      formatter(std::move(formatter)) {}
+    public:
+        Logger(string name, Level::level level, Formatter::ptr formatter) : name(std::move(name)), level(level),
+                                                                            formatter(std::move(formatter)) {}
 
-public:
-    using ptr = std::shared_ptr<Logger>;
-
-
-    void addAppender(Appender::ptr appender);
-
-    void eraseAppender(Appender::ptr appender);
-
-    void log(const Event::ptr& event);
-
-    const string& getName() const { return name; }
-};
+    public:
+        using ptr = std::shared_ptr<Logger>;
 
 
+        void addAppender(Appender::ptr appender);
+
+        void eraseAppender(Appender::ptr appender);
+
+        void log(const Event::ptr& event);
+
+        const string& getName() const { return name; }
+    };
+
+
+}
 #endif //LOG_LOGGER_H

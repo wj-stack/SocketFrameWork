@@ -28,13 +28,14 @@
 //XX(F, FiberIdFormatItem),           //F:协程id
 //XX(N, ThreadNameFormatItem),        //N:线程名称
 
-class FormatItem
-{
-public:
-    using ptr = std::shared_ptr<FormatItem>;
-    virtual  void format(std::ostream& os,Event::ptr event) = 0;
-    virtual ~FormatItem() = default;
-};
+namespace wyatt{
+    class FormatItem
+    {
+    public:
+        using ptr = std::shared_ptr<FormatItem>;
+        virtual  void format(std::ostream& os,Event::ptr event) = 0;
+        virtual ~FormatItem() = default;
+    };
 
 
 #define XX(item) \
@@ -44,64 +45,65 @@ public:          \
         explicit item##FormatItem(const std::string& str){} \
 void format(std::ostream &os, Event::ptr event) override; \
 };
-XX(Message)
-XX(Elapse)
-XX(Name)
-XX(ThreadId)
-XX(File)
-XX(Line)
-XX(FiberId)
-XX(ThreadName)
+    XX(Message)
+    XX(Elapse)
+    XX(Name)
+    XX(ThreadId)
+    XX(File)
+    XX(Line)
+    XX(FiberId)
+    XX(ThreadName)
 #undef XX
 
-class TimeFormatItem: public FormatItem
-{
-    std::string dateFormat;
-public:
-    explicit TimeFormatItem(const std::string& dateFormat = "%Y-%m-%d %H:%M:%S");
-    void format(std::ostream &os, Event::ptr event) override;
-};
+    class TimeFormatItem: public FormatItem
+    {
+        std::string dateFormat;
+    public:
+        explicit TimeFormatItem(const std::string& dateFormat = "%Y-%m-%d %H:%M:%S");
+        void format(std::ostream &os, Event::ptr event) override;
+    };
 
-class LevelFormatItem: public FormatItem
-{
-public:
-    explicit LevelFormatItem(const std::string& str){}
-    void format(std::ostream &os, Event::ptr event) override;
-};
+    class LevelFormatItem: public FormatItem
+    {
+    public:
+        explicit LevelFormatItem(const std::string& str){}
+        void format(std::ostream &os, Event::ptr event) override;
+    };
 
-class TabFormatItem: public FormatItem
-{
-public:
-    explicit TabFormatItem(const std::string& str){}
-    void format(std::ostream &os, Event::ptr event) override;
-};
+    class TabFormatItem: public FormatItem
+    {
+    public:
+        explicit TabFormatItem(const std::string& str){}
+        void format(std::ostream &os, Event::ptr event) override;
+    };
 
-class NewLineFormatItem: public FormatItem
-{
-public:
-    explicit NewLineFormatItem(const std::string& str){}
-    void format(std::ostream &os, Event::ptr event) override;
-};
+    class NewLineFormatItem: public FormatItem
+    {
+    public:
+        explicit NewLineFormatItem(const std::string& str){}
+        void format(std::ostream &os, Event::ptr event) override;
+    };
 
-class StringFormatItem: public FormatItem
-{
-private:
-    std::string str;
-public:
-    explicit StringFormatItem(std::string  str) : str(std::move(str)){}
-    void format(std::ostream &os, Event::ptr event) override;
-};
+    class StringFormatItem: public FormatItem
+    {
+    private:
+        std::string str;
+    public:
+        explicit StringFormatItem(std::string  str) : str(std::move(str)){}
+        void format(std::ostream &os, Event::ptr event) override;
+    };
 
 
-class Formatter {
-private:
-    std::vector<FormatItem::ptr> m_items;
-public:
-    using ptr = std::shared_ptr<Formatter>;
-    explicit Formatter(const std::string& format = "%d{%Y-%m-%d %H:%M:%S}%T%t%T%N%T%F%T[%p]%T[%c]%T%f:%l%T%m%n");
-    void format(std::ostream& os,const Event::ptr& event);
+    class Formatter {
+    private:
+        std::vector<FormatItem::ptr> m_items;
+    public:
+        using ptr = std::shared_ptr<Formatter>;
+        explicit Formatter(const std::string& format = "%d{%Y-%m-%d %H:%M:%S}%T%t%T%N%T%F%T[%p]%T[%c]%T%f:%l%T%m%n");
+        void format(std::ostream& os,const Event::ptr& event);
 
-};
+    };
 
+}
 
 #endif //LOG_FORMATTER_H

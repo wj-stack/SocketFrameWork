@@ -4,7 +4,11 @@
 
 #include "level.h"
 
-const char* Level::toString(Level::level level) {
-    const char *str[] = {"DEBUG", "INFO", "WARN", "ERROR", "FATAL"};
-    return str[level];
+namespace wyatt{
+
+    const char* Level::toString(Level::level level) {
+        const char *str[] = {"DEBUG", "INFO", "WARN", "ERROR", "FATAL"};
+        return str[level];
+    }
+
 }
