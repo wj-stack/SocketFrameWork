@@ -12,7 +12,7 @@ namespace wyatt{
 
     EventWarp::~EventWarp()    {
         auto event =make_shared<Event>(ss.str(), level, name, until::GetThreadId(),
-                                       file, line, 0 , "");
+                                       file, line, 0 , wyatt::Thread::getThisName());
         logger->log(event);
     }
 }

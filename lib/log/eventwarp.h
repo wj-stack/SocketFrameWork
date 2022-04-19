@@ -10,6 +10,8 @@
 #include <sstream>
 #include <thread>
 #include "../until/until.h"
+#include "../thread/mutex.h"
+#include "../thread/thread.h"
 
 namespace wyatt{
     class EventWarp {

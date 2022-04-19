@@ -3,43 +3,55 @@
 #include "lib/config/config.h"
 #include "lib/log/loggerManager.h"
 #include "lib/thread/thread.h"
+#include "lib/until//until.h"
+#include "lib/thread/mutex.h"
 #include <mutex>
 #include <thread>
+#include <execinfo.h>
+#include <memory>
+#include "assert.h"
+
+#include "lib/event/EventLoop.h"
+#include "lib/event/Channel.h"
+
+#include <sys/timerfd.h>
 
 
 
-std::mutex _mutex;
-std::fstream fs;
+EventLoop e;
+
+void timeOut()
+{
+    WYATT_LOG_ROOT_DEBUG() << "TIME OUT" ;
+    e.quit();
+}
 
 void fun1()
 {
-//    fs << i << '\n';
-    auto p =  wyatt::Thread::getThis();;
-    if(p)
-    {
-        std::lock_guard<std::mutex> lockGuard{_mutex};
-        WYATT_LOG_ROOT_DEBUG() << p->getId();
-    }
-//    WYATT_LOG_ROOT_DEBUG() << wyatt::Thread::getThisThread();
-//    WYATT_LOG_ROOT_DEBUG() << wyatt::Thread::getThisThread()->getId();
+    WYATT_LOG_ROOT_DEBUG() << "fun1" <<endl;
+
+    int timerfd = ::timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK | TFD_CLOEXEC);
+
+    Channel channel(&e,timerfd);
+    channel.setReadCallBack(&timeOut);
+    channel.enableReading();
+
+    struct itimerspec howlong;
+    bzero(&howlong, sizeof howlong);
+    howlong.it_value.tv_sec = 5;
+    ::timerfd_settime(timerfd, 0, &howlong, nullptr);
+
+    e.loop();
+    close(timerfd);
 }
 
 int main() {
+//
+    wyatt::Thread t(fun1,"fun1");
+
+    t.join();
 
 
-//    std::cout << getpid() << std::endl;
-    fs.open("1.txt", ios::app);
-    vector<wyatt::Thread::ptr> th;
-    for (int i = 0; i < 100; ++i) {
-        th.emplace_back(std::make_shared<wyatt::Thread>(fun1, "name_" + to_string(i)));
-    }
 
-
-    sleep(5);
-
-    for (int i = 0; i < 100; ++i) {
-        th[i]->join();
-    }
-    fs.close();
     return 0;
 }

@@ -6,10 +6,17 @@ set(CMAKE_CXX_STANDARD 11)
 file(GLOB_RECURSE config lib/config/*.cpp)
 file(GLOB_RECURSE log lib/log/*.cpp)
 file(GLOB_RECURSE thread lib/thread/*.cpp)
+#file(GLOB_RECURSE event lib/event/*.cpp)
+
+file(GLOB_RECURSE event lib/event/Channel.cpp
+        lib/event/EventLoop.cpp
+        lib/event/Poller.cpp
+        )
 
 add_library(config SHARED ${config})
 add_library(log SHARED ${log})
 add_library(thread SHARED ${thread})
+add_library(event SHARED ${event})
 
 
 
@@ -20,5 +27,15 @@ target_link_libraries(SocketFrameWork
         thread
         yaml-cpp
         pthread
+        event
         )
 
+add_executable(logger_test logger_test.cpp)
+target_link_libraries(logger_test
+        log
+        config
+        thread
+        yaml-cpp
+        pthread
+        event
+        )

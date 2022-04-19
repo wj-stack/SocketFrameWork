@@ -33,12 +33,10 @@ namespace wyatt
     class FileAppender  : public Appender
     {
     private:
-//        std::fstream fs;
         static std::map<std::string,std::fstream> mp;
         std::string m_path;
     public:
         explicit FileAppender(const char* filepath) : m_path(filepath){
-            cout << "FileAppender(const char* filepath) : m_path(filepath)" << filepath << endl;
             if (mp.find(filepath) == mp.end()) {
                 mp[filepath].open(filepath, ios_base::app);
             }
@@ -47,7 +45,6 @@ namespace wyatt
             return mp[m_path];
         }
         ~FileAppender() override{
-//            cout << m_path << " " <<  "~FileAppender()" << endl;
             mp[m_path].flush();
             mp[m_path].close();
         }
