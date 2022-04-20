@@ -13,12 +13,13 @@
 
 #include "lib/event/EventLoop.h"
 #include "lib/event/Channel.h"
-
+#include "lib/event/Timer.h"
+#include "lib/event/TimerManager.h"
 #include <sys/timerfd.h>
 
 
-
 EventLoop e;
+TimerManager timerManager(&e);
 
 void timeOut()
 {
@@ -30,25 +31,31 @@ void fun1()
 {
     WYATT_LOG_ROOT_DEBUG() << "fun1" <<endl;
 
-    int timerfd = ::timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK | TFD_CLOEXEC);
+//    int timerfd = ::timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK | TFD_CLOEXEC);
+//
+//    Channel channel(&e,timerfd);
+//    channel.setReadCallBack(&timeOut);
+//    channel.enableReading();
 
-    Channel channel(&e,timerfd);
-    channel.setReadCallBack(&timeOut);
-    channel.enableReading();
+//    struct itimerspec howlong;
+//    bzero(&howlong, sizeof howlong);
+//    howlong.it_value.tv_sec = 5;
+//    ::timerfd_settime(timerfd, 0, &howlong, nullptr);
+    e.runAfter(timeOut, 3 * 1000);
 
-    struct itimerspec howlong;
-    bzero(&howlong, sizeof howlong);
-    howlong.it_value.tv_sec = 5;
-    ::timerfd_settime(timerfd, 0, &howlong, nullptr);
-
-    e.loop();
-    close(timerfd);
+//    close(timerfd);
 }
 
-int main() {
-//
-    wyatt::Thread t(fun1,"fun1");
 
+
+int main() {
+//    wyatt::Thread::getThis()->setThisName("main_thread");
+    wyatt::Thread t(fun1,"fun1");
+    sleep(1);
+
+    e.loop();
+
+//    sleep(1);
     t.join();
 
 

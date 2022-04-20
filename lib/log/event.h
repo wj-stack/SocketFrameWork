@@ -43,7 +43,7 @@ namespace wyatt{
 
             using namespace std;
             // 获取操作系统当前时间点（精确到微秒）
-            nowTime = chrono::time_point_cast<chrono::microseconds>(chrono::system_clock::now());
+            nowTime = chrono::time_point_cast<chrono::microseconds>(chrono::system_clock::now()) ;
             elapse = nowTime.time_since_epoch().count() - startTime.time_since_epoch().count();
             time = nowTime.time_since_epoch().count() / 1000000;
 

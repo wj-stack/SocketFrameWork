@@ -33,7 +33,8 @@ public:
     void setErrorCallBack(const CB &mErrorCb);
     void enableReading();
     void enableWriting();
-
+    void disableAll();
+    void remove();
     void setEvent(int revt);// 设置当前事件
     int getEvent(); // 获取感兴趣的事件
 

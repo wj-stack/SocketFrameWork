@@ -11,6 +11,9 @@ file(GLOB_RECURSE thread lib/thread/*.cpp)
 file(GLOB_RECURSE event lib/event/Channel.cpp
         lib/event/EventLoop.cpp
         lib/event/Poller.cpp
+        lib/event/Timer.cpp
+        lib/event/TimerManager.cpp
+        lib/until/until.cpp
         )
 
 add_library(config SHARED ${config})

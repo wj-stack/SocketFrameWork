@@ -55,9 +55,11 @@ namespace wyatt
         if(v.empty()) {
             return;
         }
+        WYATT_LOG_ROOT_DEBUG() << "this_thread:" << this_thread ;
         if(this_thread) {
             this_thread->name = name;
         }
         this_name = v;
+        WYATT_LOG_ROOT_DEBUG() << "this name:" << this_name;
     }
 }

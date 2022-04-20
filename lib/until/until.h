@@ -16,39 +16,26 @@
 #include <arpa/inet.h>
 #include <ifaddrs.h>
 #include <execinfo.h>
-
+#include <sys/timerfd.h>
+#include <vector>
+#include <string>
+#include <sstream>
+#include <chrono>
 namespace wyatt
 {
     class until {
     public:
 
 
-        static pid_t GetThreadId() {
-            return syscall(SYS_gettid);
-        }
+        static pid_t GetThreadId();
 
-        static void BackTrace(std::vector<std::string>& vec,int size,int skip = 0)
-        {
-            void **array = (void **) malloc(sizeof(void *) * size);
-            size_t s = backtrace(array, size);
-            char** strings = backtrace_symbols(array, s);
-            for (int i = skip; i < s; ++i) {
-                vec.emplace_back(strings[i]);
-            }
-            free(array);
-            free(strings);
-        }
+        static void BackTrace(std::vector<std::string>& vec,int size,int skip = 0);
 
-        static std::string BackTrace(int size, int skip, const std::string &prefix)
-        {
-            std::vector<std::string> vec;
-            BackTrace(vec, size, skip);
-            std::stringstream ss;
-            for (auto &v: vec) {
-                ss << prefix << v << endl;
-            }
-            return ss.str();
-        }
+        static std::string BackTrace(int size, int skip, const std::string &prefix);
+        static uint64_t Now();
+        static uint64_t TimeAfter(uint64_t delay) ;// 纳米级别
+
+        static void createTimer(int timerfd, uint64_t delay);
 
 
     };

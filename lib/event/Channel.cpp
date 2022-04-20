@@ -22,6 +22,7 @@ void Channel::update(){
 }
 
 void Channel::enableReading() {event_ |= EVENT_READ ; update();}
+void Channel::disableAll() {event_ = EVENT_NONE ; update();}
 
 void Channel::enableWriting()  {event_ |= EVENT_WRITE ; update();}
 
@@ -46,3 +47,7 @@ void Channel::setEvent(int revt) { revent = revt; }
 int Channel::getEvent()  { return event_; }
 
 int Channel::getFd()   { return fd; }
+
+void Channel::remove() {
+    loop->removeChannel(this);
+}
