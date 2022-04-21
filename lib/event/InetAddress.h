@@ -14,7 +14,7 @@
 class InetAddress {
 public:
     InetAddress() = default;
-    InetAddress(uint16_t port,bool loopBackOnly = true, bool ipv6 = false);
+    explicit InetAddress(uint16_t port,bool loopBackOnly = true, bool ipv6 = false);
     sockaddr * getSocketAddress() const;
     int getStructSize() const;
     std::string toIp() const;

@@ -17,6 +17,8 @@ file(GLOB_RECURSE event lib/event/Channel.cpp
         lib/event/Acceptor.cpp
         lib/event/InetAddress.cpp
         lib/event/Socket.cpp
+        lib/event/TcpConnection.cpp
+        lib/event/TcpServer.cpp
         )
 
 add_library(config SHARED ${config})

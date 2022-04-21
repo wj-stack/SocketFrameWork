@@ -34,7 +34,7 @@ void Acceptor::setNewConnectCallBack(const Acceptor::callback &cb) {
 void Acceptor::handleRead() {
 
     assert(loop->isInLoopThread());
-    InetAddress inetAddress;
+    InetAddress inetAddress{};
     int connfd = Socket::accept(sockfd,inetAddress);
     if (connfd > 0)
     {

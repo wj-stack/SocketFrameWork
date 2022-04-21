@@ -18,23 +18,39 @@
 #include <sys/timerfd.h>
 
 #include "lib/event/InetAddress.h"
-#include "lib/event/Acceptor.h"
+#include "lib/event/TcpServer.h"
 
-void newConnect(int fd,const InetAddress& conn)
+void newConnect(const TcpConnection::ptr& conn)
 {
-    WYATT_LOG_ROOT_DEBUG() << "new client:" << fd;
-    WYATT_LOG_ROOT_DEBUG() << "new client:" << conn.toIp() << " " << conn.toPort();
-    const char* a = "hello world\n";
-    ::write(fd,a,strlen(a));
-    Socket::close(fd);
+
+    WYATT_LOG_ROOT_DEBUG() << "new Connect" << " " << conn->getFd();
+}
+
+
+void ReadEvent(const TcpConnection::ptr& conn,char* buf,size_t t)
+{
+    WYATT_LOG_ROOT_DEBUG() << "read";
+    WYATT_LOG_ROOT_DEBUG() << buf << " " << t;
+}
+
+
+void CloseEvent(const TcpConnection::ptr& conn)
+{
+    WYATT_LOG_ROOT_DEBUG() << "close";
 }
 
 int main() {
     InetAddress inetAddress(8888, false, false);
     EventLoop eventLoop;
-    Acceptor acceptor(&eventLoop,&inetAddress);
-    acceptor.setNewConnectCallBack(newConnect);
-    acceptor.listen();
+    TcpServer tcpServer(&eventLoop, &inetAddress);
+    tcpServer.setConnectCallBack(newConnect);
+    tcpServer.setCloseCallBack(CloseEvent);
+    tcpServer.setErrorCallBack(CloseEvent);
+    tcpServer.start();
+//    Acceptor acceptor(&eventLoop,&inetAddress);
+//    acceptor.setNewConnectCallBack(newConnect);
+//    acceptor.listen();
+
     eventLoop.loop();
     return 0;
 }

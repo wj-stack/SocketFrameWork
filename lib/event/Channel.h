@@ -16,6 +16,7 @@ private:
     const int EVENT_READ = EPOLLIN | EPOLLPRI;
     const int EVENT_WRITE = EPOLLOUT;
     const int EVENT_ERR = EPOLLERR;
+    const int EVENT_CLOSE = EPOLLRDHUP;
     int fd;
     int index = -1; // 默认在pollfds中的位置
     int event_ = 0; //当前Channel感兴趣的事件
@@ -31,6 +32,8 @@ public:
     void setReadCallBack(const CB &mReadCb);
     void setWriteCallBack(const CB &mWriteCb);
     void setErrorCallBack(const CB &mErrorCb);
+    void setCloseCallBack(const CB &mCloseCb);
+
     void enableReading();
     void enableWriting();
     void disableAll();
@@ -47,6 +50,7 @@ private:
     CB m_writeCb;
     CB m_errorCb;
     CB m_readCb;
+    CB m_closeCb;
 
 };
 

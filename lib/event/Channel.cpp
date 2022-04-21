@@ -29,16 +29,23 @@ void Channel::enableWriting()  {event_ |= EVENT_WRITE ; update();}
 void Channel::handleEvent(){
     if (revent & EVENT_ERR)
     {
-        m_errorCb();
+        WYATT_LOG_ROOT_DEBUG() << "channel err";
+        if(m_errorCb)m_errorCb();
+        return ;
+    }
+    if ((revent & EVENT_CLOSE)) {
+        WYATT_LOG_ROOT_DEBUG() << "channel close";
+        if(m_closeCb)m_closeCb();
+        return ;
     }
 
     if (revent & EVENT_READ)
     {
-        m_readCb();
+        if(m_readCb)m_readCb();
     }
     if(revent & EVENT_WRITE)
     {
-        m_writeCb();
+        if(m_writeCb)m_writeCb();
     }
 }
 
@@ -50,4 +57,8 @@ int Channel::getFd()   { return fd; }
 
 void Channel::remove() {
     loop->removeChannel(this);
+}
+
+void Channel::setCloseCallBack(const Channel::CB &mCloseCb) {
+    m_closeCb = mCloseCb;
 }
