@@ -17,6 +17,7 @@ int EventLoop::createEventfd() {
 }
 
 void EventLoop::wakeup() {
+    WYATT_LOG_ROOT_DEBUG() << "WAKEUp";
     uint64_t one = 1;
     ssize_t n = ::write(wakefd, &one, sizeof one);
     if (n != sizeof one) {
@@ -25,6 +26,7 @@ void EventLoop::wakeup() {
 }
 
 void EventLoop::handleRead() {
+    WYATT_LOG_ROOT_DEBUG() << "handleRead";
     uint64_t one = 1;
     ssize_t n = ::read(wakefd, &one, sizeof one);
     if (n != sizeof one) {
@@ -68,8 +70,9 @@ void EventLoop::loop() {
         for (auto &v: channelList) {
             auto &channel = v.second;
             channel->handleEvent();
+//            WYATT_LOG_ROOT_DEBUG() << "event fd:"  << v.first;
         }
-        WYATT_LOG_ROOT_DEBUG() << "event size:" << channelList.size();
+        WYATT_LOG_ROOT_DEBUG() << "event " << channelList.size();
         CallBackQueue();
     }
     WYATT_LOG_ROOT_DEBUG() << "loop is stopping";

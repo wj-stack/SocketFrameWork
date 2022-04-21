@@ -25,7 +25,8 @@ public:
     void cancel(int id);
 
 private:
-    static void TimeOut(TimerManager* p);
+    static void TimeOut(TimerManager *p);
+    void readTimerfd();
     EventLoop* loop;
     int timerfd;
     Channel channel;

@@ -17,7 +17,11 @@ void TimerManager::TimeOut(TimerManager *p)
 
     while (!p->timer_set.empty() && (*p->timer_set.begin())->getTimeStamp() <= wyatt::until::Now()) {
         auto& timer = (*p->timer_set.begin());
-        timer->run();
+        p->loop->runInLoop([&](){
+            timer->run();
+            p->readTimerfd();
+            WYATT_LOG_ROOT_DEBUG() << "定时器事件！";
+        });
         if(timer->isRecycle())
         {
             timer->reset();
@@ -45,4 +49,13 @@ void TimerManager::addTimer( const std::function<void()>& cb, uint64_t delay,boo
 }
 void TimerManager::cancel(int id){
 
+}
+
+void TimerManager::readTimerfd()    {
+    uint64_t howmany;
+    ssize_t n = ::read(timerfd, &howmany, sizeof howmany);
+    if (n != sizeof howmany)
+    {
+        WYATT_LOG_ROOT_DEBUG() << "TimerQueue::handleRead() reads " << n << " bytes instead of 8";
+    }
 }
