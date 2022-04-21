@@ -72,7 +72,6 @@ void EventLoop::loop() {
             channel->handleEvent();
 //            WYATT_LOG_ROOT_DEBUG() << "event fd:"  << v.first;
         }
-        WYATT_LOG_ROOT_DEBUG() << "event " << channelList.size();
         CallBackQueue();
     }
     WYATT_LOG_ROOT_DEBUG() << "loop is stopping";
@@ -110,6 +109,7 @@ void EventLoop::runInLoop(const EventLoop::CB &cb) {
     }
 }
 
+
 bool EventLoop::isInLoopThread() const {
     return getCurThreadId() == threadId;
 }
@@ -123,5 +123,7 @@ void EventLoop::runAfter(const EventLoop::CB &cb, uint64_t delay) {
 void EventLoop::runAt(const EventLoop::CB &cb) {
     timerManager->addTimer(cb, 1, false);
 }
+
+
 
 

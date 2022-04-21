@@ -14,6 +14,9 @@ file(GLOB_RECURSE event lib/event/Channel.cpp
         lib/event/Timer.cpp
         lib/event/TimerManager.cpp
         lib/until/until.cpp
+        lib/event/Acceptor.cpp
+        lib/event/InetAddress.cpp
+        lib/event/Socket.cpp
         )
 
 add_library(config SHARED ${config})

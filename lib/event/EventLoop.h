@@ -18,6 +18,9 @@
 #include "Poller.h"
 #include "TimerManager.h"
 
+
+//#define assertInLoopThread() assert(isInLoopThread())
+
 class EventLoop {
 private:
     const int TimeOutMs = -1;
@@ -65,7 +68,9 @@ public:
     void runInLoop(const CB &cb);
 
     void runAt(const CB& cb);
+
     void runAfter(const CB& cb ,uint64_t delay);
+
 };
 
 
