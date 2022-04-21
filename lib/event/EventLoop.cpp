@@ -34,7 +34,7 @@ void EventLoop::handleRead() {
     }
 }
 
-EventLoop::EventLoop() : wakefd(createEventfd()), weakChannel(this, wakefd) ,timerManager(new TimerManager(this)) {
+EventLoop::EventLoop() : wakefd(createEventfd()), weakChannel(this, wakefd), timerManager(new TimerManager(this)) {
     if (t_loopInThread) {
         WYATT_LOG_ROOT_DEBUG() << "Another EventLoop" << t_loopInThread << "existed in this thread"
                                << wyatt::Thread::getThis();

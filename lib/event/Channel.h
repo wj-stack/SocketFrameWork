@@ -9,7 +9,8 @@
 #include <functional>
 
 class EventLoop;
-class Channel{
+
+class Channel {
 private:
     using CB = std::function<void()>;
     const int EVENT_NONE = 0;
@@ -21,23 +22,34 @@ private:
     int index = -1; // 默认在pollfds中的位置
     int event_ = 0; //当前Channel感兴趣的事件
     int revent = 0; //当前Channel真实的事件
-    EventLoop* loop;
+    EventLoop *loop;
+
     void update();
 
 public:
 
-    Channel(EventLoop* loop_,int fd_) : loop(loop_) , fd(fd_) {}
-    void setIndex(int idx){ index = idx; }
+    Channel(EventLoop *loop_, int fd_) : loop(loop_), fd(fd_) {}
+
+    void setIndex(int idx) { index = idx; }
+
     int getIndex() const { return index; }
+
     void setReadCallBack(const CB &mReadCb);
+
     void setWriteCallBack(const CB &mWriteCb);
+
     void setErrorCallBack(const CB &mErrorCb);
+
     void setCloseCallBack(const CB &mCloseCb);
 
     void enableReading();
+
     void enableWriting();
+
     void disableAll();
+
     void remove();
+
     void setEvent(int revt);// 设置当前事件
     int getEvent(); // 获取感兴趣的事件
 

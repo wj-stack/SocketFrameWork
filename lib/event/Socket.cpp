@@ -9,31 +9,30 @@
 
 int Socket::createSocket() {
     int fd = ::socket(AF_INET,
-             SOCK_STREAM | SOCK_NONBLOCK , 0);
-    if (fd < 0)
-    {
+                      SOCK_STREAM | SOCK_NONBLOCK, 0);
+    if (fd < 0) {
         WYATT_LOG_ROOT_DEBUG() << "create socket error";
     }
     return fd;
 }
 
-bool Socket::bind(int fd, const InetAddress & listenAddress) {
+bool Socket::bind(int fd, const InetAddress &listenAddress) {
 
     // 设置端口复用
     int on = 1;
-    setsockopt( fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on) );
+    setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
 
     if (::bind(fd, listenAddress.getSocketAddress(), listenAddress.getStructSize()) == -1) {
-        WYATT_LOG_ROOT_DEBUG() << "bind socket error: " << strerror(errno) <<"(errno: "<< errno << ")";
+        WYATT_LOG_ROOT_DEBUG() << "bind socket error: " << strerror(errno) << "(errno: " << errno << ")";
         return false;
     }
     return true;
 }
 
-bool Socket::listen(int fd,int n) {
+bool Socket::listen(int fd, int n) {
 
     if (::listen(fd, n) == -1) {
-        WYATT_LOG_ROOT_DEBUG() << "listen socket error: " << strerror(errno) <<"(errno: "<< errno << ")";
+        WYATT_LOG_ROOT_DEBUG() << "listen socket error: " << strerror(errno) << "(errno: " << errno << ")";
         return false;
     }
     return true;
@@ -42,27 +41,24 @@ bool Socket::listen(int fd,int n) {
 int Socket::accept(int fd, InetAddress &inetAddress) {
     struct sockaddr_in6 addr{};
     bzero(&addr, sizeof addr);
-    int conn = accept(fd,&addr);
+    int conn = accept(fd, &addr);
     inetAddress.setSockAddrInet6(addr);
     return conn;
 }
 
-int Socket::accept(int sockfd, struct sockaddr_in6* addr)
-{
+int Socket::accept(int sockfd, struct sockaddr_in6 *addr) {
     socklen_t addrlen = static_cast<socklen_t>(sizeof *addr);
 #if VALGRIND || defined (NO_ACCEPT4)
     int connfd = ::accept(sockfd, sockaddr_cast(addr), &addrlen);
   setNonBlockAndCloseOnExec(connfd);
 #else
-    int connfd = ::accept4(sockfd, (struct sockaddr*)(addr),
+    int connfd = ::accept4(sockfd, (struct sockaddr *) (addr),
                            &addrlen, SOCK_NONBLOCK | SOCK_CLOEXEC);
 #endif
-    if (connfd < 0)
-    {
+    if (connfd < 0) {
         int savedErrno = errno;
         WYATT_LOG_ROOT_DEBUG() << "Socket::accept";
-        switch (savedErrno)
-        {
+        switch (savedErrno) {
             case EAGAIN:
             case ECONNABORTED:
             case EINTR:
@@ -91,18 +87,15 @@ int Socket::accept(int sockfd, struct sockaddr_in6* addr)
     return connfd;
 }
 
-void Socket::toIp(const struct sockaddr* addr,char* buf,int size) {
+void Socket::toIp(const struct sockaddr *addr, char *buf, int size) {
 
-    if (addr->sa_family == AF_INET)
-    {
-        const struct sockaddr_in* addr4 = (struct sockaddr_in*)(addr);
+    if (addr->sa_family == AF_INET) {
+        const struct sockaddr_in *addr4 = (struct sockaddr_in *) (addr);
 //        WYATT_LOG_ROOT_DEBUG() << "addr4" << addr4;
         ::inet_ntop(AF_INET, &addr4->sin_addr, buf, static_cast<socklen_t>(size));
-    }
-    else if (addr->sa_family == AF_INET6)
-    {
+    } else if (addr->sa_family == AF_INET6) {
         assert(size >= INET6_ADDRSTRLEN);
-        const struct sockaddr_in6* addr6 = (struct sockaddr_in6*)(addr);
+        const struct sockaddr_in6 *addr6 = (struct sockaddr_in6 *) (addr);
         ::inet_ntop(AF_INET6, &addr6->sin6_addr, buf, static_cast<socklen_t>(size));
     }
 }

@@ -8,13 +8,19 @@
 #include <functional>
 #include <cinttypes>
 #include "../until/until.h"
+
 class Timer {
 public:
-    Timer(const std::function<void()> &cb, uint64_t delay,bool recycle);
+    Timer(const std::function<void()> &cb, uint64_t delay, bool recycle);
+
     void reset();
+
     void run();
+
     uint64_t getTimeStamp() const { return timeStamp; }
+
     bool isRecycle() const { return recycle; }
+
 private:
     static int sid;
     int id;

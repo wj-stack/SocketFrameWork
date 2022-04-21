@@ -14,26 +14,14 @@
 class EventLoopThread {
 private:
     std::condition_variable cv;
-    EventLoop* loop;
+    EventLoop *loop;
     std::mutex mutex_;
     wyatt::Semaphore semaphore;
-    void ThreadFunc(){
-        EventLoop eventLoop;
-        {
-            loop = &eventLoop;
-            semaphore.notify();
-        }
-        WYATT_LOG_ROOT_DEBUG() << "loop:  " << loop;
-        loop->loop();
-    }
+
+    void ThreadFunc();
+
 public:
-    EventLoop* startLoop(const std::string& name = "EventLoop"){
-        wyatt::Thread t([&](){
-            ThreadFunc();
-        },name);
-        semaphore.wait();
-        return loop;
-    }
+    EventLoop *startLoop(const std::string &name = "EventLoop") ;
 };
 
 

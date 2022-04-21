@@ -7,18 +7,33 @@
 
 #include "Channel.h"
 #include "EventLoop.h"
-class TcpConnection : std::enable_shared_from_this<TcpConnection>{
+#include "Buffer.h"
+
+class TcpConnection : std::enable_shared_from_this<TcpConnection> {
 public:
     using ptr = shared_ptr<TcpConnection>;
-    enum STATE{CONNECTING,CONNECTED,ERROR,CLOSE};
-    TcpConnection(EventLoop* loop_,int fd_,int id_);
+    enum STATE {
+        CONNECTING, CONNECTED, ERROR, CLOSE
+    };
+
+    TcpConnection(EventLoop *loop_, int fd_, int id_);
+
     int getState() const { return state; }
+
     void setState(STATE s) { state = s; }
-    Channel* getChannel() { return &channel; }
+
+    Channel *getChannel() { return &channel; }
+
     int getFd() { return fd; }
+
+    int getIndex() const { return id; }
+
+    Buffer &getInputBuffer() { return inputBuffer; }
+
 private:
+    Buffer inputBuffer;
     int id;
-    EventLoop* loop;
+    EventLoop *loop;
     int fd;
     Channel channel;
     STATE state = CONNECTING;

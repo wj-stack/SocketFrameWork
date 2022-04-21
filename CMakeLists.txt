@@ -11,6 +11,7 @@ file(GLOB_RECURSE thread lib/thread/*.cpp)
 file(GLOB_RECURSE event lib/event/Channel.cpp
         lib/event/EventLoop.cpp
         lib/event/Poller.cpp
+        lib/event/EventLoopThread.cpp
         lib/event/Timer.cpp
         lib/event/TimerManager.cpp
         lib/until/until.cpp
@@ -19,13 +20,13 @@ file(GLOB_RECURSE event lib/event/Channel.cpp
         lib/event/Socket.cpp
         lib/event/TcpConnection.cpp
         lib/event/TcpServer.cpp
+        lib/event/Buffer.cpp
         )
 
 add_library(config SHARED ${config})
 add_library(log SHARED ${log})
 add_library(thread SHARED ${thread})
 add_library(event SHARED ${event})
-
 
 
 add_executable(SocketFrameWork main.cpp)

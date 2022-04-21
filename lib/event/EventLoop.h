@@ -40,12 +40,12 @@ private:
 
 
     int createEventfd();
+
     void wakeup(); // 唤醒
     void handleRead(); // 处理唤醒，防止一直唤醒
     void CallBackQueue(); // 消费者，处理添加进来的函数
 
 public:
-
 
 
     static pid_t getCurThreadId();
@@ -67,9 +67,9 @@ public:
 
     void runInLoop(const CB &cb);
 
-    void runAt(const CB& cb);
+    void runAt(const CB &cb);
 
-    void runAfter(const CB& cb ,uint64_t delay);
+    void runAfter(const CB &cb, uint64_t delay);
 
 };
 

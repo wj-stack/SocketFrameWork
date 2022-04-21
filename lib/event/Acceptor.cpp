@@ -5,18 +5,16 @@
 #include "Acceptor.h"
 
 Acceptor::Acceptor(EventLoop *_loop, InetAddress *listen) : loop(_loop), listenAddr(listen),
-                                                            sockfd(Socket::createSocket()), channel(loop,sockfd) {
+                                                            sockfd(Socket::createSocket()), channel(loop, sockfd) {
 
 }
-
-
 
 
 void Acceptor::listen() {
     Socket::bind(sockfd, *listenAddr);
     Socket::listen(sockfd, 1024);
     channel.enableReading();
-    channel.setReadCallBack([&](){
+    channel.setReadCallBack([&]() {
         WYATT_LOG_ROOT_DEBUG() << "have client";
         handleRead();
     });
@@ -35,14 +33,12 @@ void Acceptor::handleRead() {
 
     assert(loop->isInLoopThread());
     InetAddress inetAddress{};
-    int connfd = Socket::accept(sockfd,inetAddress);
-    if (connfd > 0)
-    {
-        if (m_cb){
-            m_cb(connfd,inetAddress);
+    int connfd = Socket::accept(sockfd, inetAddress);
+    if (connfd > 0) {
+        if (m_cb) {
+            m_cb(connfd, inetAddress);
         }
-    }else
-    {
+    } else {
         ::close(connfd);
     }
 

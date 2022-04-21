@@ -10,24 +10,32 @@
 #include "Channel.h"
 #include <functional>
 #include <memory>
+
 class EventLoop;
+
 class TimerManager {
 public:
 
     struct TimerEvent {
-        bool operator()(const shared_ptr<Timer> timer1,const shared_ptr<Timer> timer2);
+        bool operator()(const shared_ptr<Timer> timer1, const shared_ptr<Timer> timer2);
     };
-    std::set<std::shared_ptr<Timer>,TimerEvent> timer_set;
 
-    explicit TimerManager(EventLoop* p);
+    std::set<std::shared_ptr<Timer>, TimerEvent> timer_set;
+
+    explicit TimerManager(EventLoop *p);
+
     ~TimerManager();
-    void addTimer( const std::function<void()>& cb, uint64_t delay,bool recycle);
+
+    void addTimer(const std::function<void()> &cb, uint64_t delay, bool recycle);
+
     void cancel(int id);
 
 private:
     static void TimeOut(TimerManager *p);
+
     void readTimerfd();
-    EventLoop* loop;
+
+    EventLoop *loop;
     int timerfd;
     Channel channel;
 };
