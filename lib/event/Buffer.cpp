@@ -41,7 +41,7 @@ void Buffer::append(char *data, int n) {
 }
 
 void Buffer::retrieve(int len) {
-    if (len >= getReadIndex()) readIndex += len;
+    if (len <= getReadIndex()) readIndex += len;
     if (readIndex == writeIndex) {
         writeIndex = readIndex = preAppendIndex;
     }

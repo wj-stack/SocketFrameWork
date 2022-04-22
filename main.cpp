@@ -31,6 +31,8 @@ void ReadEvent(const TcpConnection::ptr &conn, Buffer &buf, size_t t) {
     WYATT_LOG_ROOT_DEBUG() << "read";
 
     WYATT_LOG_ROOT_DEBUG() << buf.begin() + 8 << " " << (int) t;
+
+    buf.retrieve(t);
 }
 
 
